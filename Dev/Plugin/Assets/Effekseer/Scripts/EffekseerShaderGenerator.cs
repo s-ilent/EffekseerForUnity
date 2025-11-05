@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -10,10 +10,8 @@ using UnityEditor;
 
 namespace Effekseer
 {
-	partial class EffekseerMaterialAsset
+	internal class EffekseerShaderGenerator
 	{
-		class ShaderGenerator
-		{
 
 			public const string gradientTemplate = @"
 struct Gradient
@@ -76,7 +74,7 @@ Gradient GradientParameter(float4 param_v, float4 param_c1, float4 param_c2, flo
 
 			public const string noiseTemplate = @"
 
-float Rand2(float2 n) { 
+float Rand2(float2 n) {
 	return FRAC(sin(dot(n, float2(12.9898, 78.233))) * 43758.5453123);
 }
 
@@ -103,7 +101,7 @@ float SimpleNoise(float2 uv, float scale) {
 
 ";
 
-			public static string GetFixedGradient(string name, GradientProperty gradient)
+			public static string GetFixedGradient(string name, EffekseerMaterialAsset.GradientProperty gradient)
 			{
 				var nl = Environment.NewLine;
 				string ss = string.Empty;
@@ -116,11 +114,11 @@ float SimpleNoise(float2 uv, float scale) {
 				ss += "g.reserved1 = 0;" + nl;
 				ss += "g.reserved2 = 0;" + nl;
 
-				GradientProperty.ColorMarker getColorKey(GradientProperty g, int index)
+				EffekseerMaterialAsset.GradientProperty.ColorMarker getColorKey(EffekseerMaterialAsset.GradientProperty g, int index)
 				{
 					if (g.ColorMarkers.Length == 0)
 					{
-						GradientProperty.ColorMarker key = new GradientProperty.ColorMarker();
+						EffekseerMaterialAsset.GradientProperty.ColorMarker key = new EffekseerMaterialAsset.GradientProperty.ColorMarker();
 						key.ColorR = 1.0f;
 						key.ColorG = 1.0f;
 						key.ColorB = 1.0f;
@@ -141,11 +139,11 @@ float SimpleNoise(float2 uv, float scale) {
 					}
 				};
 
-				GradientProperty.AlphaMarker getAlphaKey(GradientProperty g, int index)
+				EffekseerMaterialAsset.GradientProperty.AlphaMarker getAlphaKey(EffekseerMaterialAsset.GradientProperty g, int index)
 				{
 					if (g.AlphaMarkers.Length == 0)
 					{
-						GradientProperty.AlphaMarker key;
+						EffekseerMaterialAsset.GradientProperty.AlphaMarker key;
 						key.Alpha = 1.0f;
 						key.Position = 0.0f;
 						return key;
@@ -183,7 +181,6 @@ float SimpleNoise(float2 uv, float scale) {
 
 				return ss;
 			}
-		}
 	}
 }
 
